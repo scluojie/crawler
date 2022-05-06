@@ -2,8 +2,6 @@ package com.hxcy.crawler.task;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import com.hxcy.crawler.entity.Item;
 import com.hxcy.crawler.entity.MethodEnum;
 import com.hxcy.crawler.utils.StringUtil;
@@ -23,7 +21,6 @@ import us.codecraft.webmagic.scheduler.BloomFilterDuplicateRemover;
 import us.codecraft.webmagic.scheduler.QueueScheduler;
 import us.codecraft.webmagic.selector.Selectable;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +81,7 @@ public class JobProcessor implements PageProcessor {
                 item.setTxnFee(BigDecimal.valueOf(Double.parseDouble(StringUtil.getValue(tdNodes.get(10).css("span").toString()))));
 
                 if (item.getTxnHash() != null & item.getValue().contains("Ether")) {
-                    if (Double.parseDouble(item.getValue().replaceAll(" Ether", "").replaceAll(",", ".")) >= 1.0 & MethodEnum.isEquals(item.getMethod())) {
+                    if (Double.parseDouble(item.getValue().replaceAll(" Ether", "").replaceAll(",", "")) >= 1.0 & MethodEnum.isEquals(item.getMethod())) {
                         //如果Guava 缓存中有这条数据 就不放入list
                         if (cache.getIfPresent(item.getTxnHash()) == null) {
                             itemList.add(item);
@@ -127,8 +124,8 @@ public class JobProcessor implements PageProcessor {
         // 创建下载器Downloader
         HttpClientDownloader httpClientDownloader = new HttpClientDownloader();
 
-        // 给下载器设置代理服务器信息 localhost 20001
-        httpClientDownloader.setProxyProvider(SimpleProxyProvider.from(new Proxy("127.0.0.1", 8123)));
+        // 给下载器设置代理服务器信息 localhost 20001 127.0.0.1 8123
+        httpClientDownloader.setProxyProvider(SimpleProxyProvider.from(new Proxy("127.0.0.1", 20001)));
         Spider.create(new JobProcessor())
                 .setDownloader(httpClientDownloader)
                 .addUrl(URL, URL + "?p=2", URL + "?p=3")

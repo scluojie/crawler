@@ -2,7 +2,6 @@ package com.hxcy.crawler.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hxcy.crawler.task.NoticePipeline;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -53,10 +52,12 @@ public class DingDingUtil {
         httpPost.setHeader("Content-Type", "application/json;charset=utf8");
         //生成json对象传入字符
         JSONObject result = new JSONObject();
-        JSONObject text = new JSONObject();
-        text.put("content", message);
-        result.put("text", text);
-        result.put("msgtype", "text");
+        JSONObject markdown = new JSONObject();
+        markdown.put("title", "以太坊交易信息");
+        markdown.put("text", message);
+        //result.put("text", text);
+        result.put("markdown",markdown );
+        result.put("msgtype", "markdown");//text
         String jsonString = JSON.toJSONString(result);
         StringEntity entity = new StringEntity(jsonString, "UTF-8");
         //设置http请求的内容

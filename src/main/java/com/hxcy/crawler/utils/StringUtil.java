@@ -15,4 +15,12 @@ public class StringUtil {
                 .replace("</td>","")
                 .replace("</span>","");
     }
+
+
+    // 替换字符串里最后出现的元素
+    public static String replaceLast( String text, String strToReplace,
+                                      String replaceWithThis ) {
+        return text.replaceFirst( "(?s)" + strToReplace + "(?!.*?" + strToReplace
+                + ")", replaceWithThis );
+    }
 }
