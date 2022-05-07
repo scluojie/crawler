@@ -2,6 +2,8 @@ package com.hxcy.crawler.task;
 
 
 import com.hxcy.crawler.entity.Item;
+import com.hxcy.crawler.entity.Trade;
+import com.hxcy.crawler.mapper.TradeMapper;
 import com.hxcy.crawler.utils.DingDingUtil;
 import com.hxcy.crawler.utils.HttpClientUtil;
 import lombok.SneakyThrows;
@@ -38,6 +40,9 @@ public class NoticePipeline implements Pipeline {
     @Value("${crawler.detail.url}")
     private String DETAIL_URL;
 
+    @Autowired
+    private TradeMapper itemMapper;
+
 
     @SneakyThrows
     @Override
@@ -51,7 +56,8 @@ public class NoticePipeline implements Pipeline {
                 String response = HttpClientUtil.sendGetForProxy(DETAIL_URL + jobsItem.getTxnHash());
                 Html html = new Html(response);
                 //List<String> list = html.css(".media-body span").css("span", "text").all();
-                String detail = html.css(".media-body").replace("<[^<>]+>", " ").replace("\n", "").replace("[ ]+", " ").toString();
+                //String detail = html.css(".media-body").replace("<[^<>]+>", " ").replace("\n", "").replace("[ ]+", " ").toString();
+                String detail = html.css(".media-body").replace("(<div.*?>)|(<span.*?>)|(</div>)|(</span>)", " ").replace("\n", "").replace("[ ]+", " ").replace("src=\"","src=\"https://etherscan.io").toString();
                 if (detail == null || "".equals(detail.trim())) {
                     logger.warn("no data....");
                 }else{
@@ -79,6 +85,12 @@ public class NoticePipeline implements Pipeline {
                 i++;
             }
             send.dingRequest(sb.toString());
+
+            //存到数据库
+           for (Item jobsItem : jobsItems) {
+               Trade trade = new Trade(jobsItem.getTxnHash(),jobsItem.getMethod(),jobsItem.getAge(),Float.parseFloat(jobsItem.getValue().replaceAll(" Ether", "").replaceAll(",","")),jobsItem.getDetail().replace(" ", "&nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&#39;"));
+               itemMapper.insert(trade);
+           }
         }
     }
 }

@@ -13,7 +13,7 @@ public class Test {
         String str = "2.89 Ether";
         //String s = StringUtil.replaceLast(str, ",", ".");
         String num = str.replaceAll(" Ether", "").replaceAll(",","");
-        System.out.println(Double.parseDouble(num));
+        System.out.println(Float.parseFloat(num));
         System.out.println(BigDecimal.valueOf(Double.parseDouble(num)));
         System.out.println(System.currentTimeMillis());
 

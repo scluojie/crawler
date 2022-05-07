@@ -35,7 +35,7 @@ public class HttpClientUtil {
             // 创建httpClient实例
             httpClient= HttpClients.createDefault();
             //设置代理IP、端口 8123
-            HttpHost proxy=new HttpHost("127.0.0.1",20001,"http");
+            HttpHost proxy=new HttpHost("127.0.0.1",8123,"http");
             //也可以设置超时时间
             // RequestConfig requestConfig = RequestConfig.custom().setProxy(proxy).setConnectTimeout(3000).setSocketTimeout(3000).setConnectionRequestTimeout(3000).build();
             RequestConfig requestConfig=RequestConfig.custom().setProxy(proxy).build();

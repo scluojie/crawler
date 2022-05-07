@@ -125,7 +125,7 @@ public class JobProcessor implements PageProcessor {
         HttpClientDownloader httpClientDownloader = new HttpClientDownloader();
 
         // 给下载器设置代理服务器信息 localhost 20001 127.0.0.1 8123
-        httpClientDownloader.setProxyProvider(SimpleProxyProvider.from(new Proxy("127.0.0.1", 20001)));
+        httpClientDownloader.setProxyProvider(SimpleProxyProvider.from(new Proxy("127.0.0.1", 8123)));
         Spider.create(new JobProcessor())
                 .setDownloader(httpClientDownloader)
                 .addUrl(URL, URL + "?p=2", URL + "?p=3")
